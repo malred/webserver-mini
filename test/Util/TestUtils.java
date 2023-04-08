@@ -1,0 +1,25 @@
+package Util;
+
+import connector.Request;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class TestUtils {
+    // 模拟请求
+    public static Request createRequest(String requestStr) {
+        requestStr = requestStr.replace('/', '\\');
+        InputStream input = new ByteArrayInputStream(requestStr.getBytes());
+        Request request = new Request(input);
+        request.parse();
+        return request;
+    }
+
+    // 文件转字符,方便比较
+    public static String readFileToString(String filename) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(filename)));
+    }
+}
