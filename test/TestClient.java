@@ -9,7 +9,8 @@ public class TestClient {
         Socket socket = new Socket("localhost", 8888);
         // 模拟发送请求
         OutputStream output = socket.getOutputStream();
-        output.write("GET /index.html HTTP/1.1".getBytes(StandardCharsets.UTF_8));
+//        output.write("GET /index.html HTTP/1.1".getBytes(StandardCharsets.UTF_8));
+        output.write("GET /servlet/TimeServlet HTTP/1.1".getBytes(StandardCharsets.UTF_8));
         socket.shutdownOutput();
         InputStream input = socket.getInputStream();
         byte[] buffer = new byte[2048];

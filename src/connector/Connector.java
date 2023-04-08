@@ -1,7 +1,9 @@
 package connector;
 
+import processor.ServletProcessor;
 import processor.StaticProcessor;
 
+import javax.servlet.Servlet;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ public class Connector implements Runnable {
 
     public void start() {
         // 运行
-        Thread thread=new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
     }
 
@@ -42,15 +44,21 @@ public class Connector implements Runnable {
                 request.parse();
                 Response response = new Response(output);
                 response.setRequest(request);
-                // 发送静态资源回去
-                StaticProcessor processor = new StaticProcessor();
-                processor.process(request, response);
+                // 如果是动态资源
+                if (request.getRequestURI().startsWith("/servlet/")) {
+                    ServletProcessor processor = new ServletProcessor();
+                    processor.process(request, response);
+                } else {
+                    // 发送静态资源回去
+                    StaticProcessor processor = new StaticProcessor();
+                    processor.process(request, response);
+                }
                 // 处理完就断开连接
                 close(socket);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             close(server);
         }
     }
